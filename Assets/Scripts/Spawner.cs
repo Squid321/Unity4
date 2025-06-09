@@ -3,15 +3,31 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
+    public GameObject powerPrefab;
     private float spawnRange = 9;
+    private int round = 3;
+    public int enemyCount;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-        Instantiate(enemyPrefab, Generate(), enemyPrefab.transform.rotation);
+        EWave(round);
     }
-
-    // Update is called once per frame
+    void EWave(int spawnint)
+    {
+        for (int i = 0; i < spawnint; i++) {
+            Instantiate(enemyPrefab, Generate(), enemyPrefab.transform.rotation);
+        }
+    }
+    void Update()
+    {
+        enemyCount = FindObjectsByType<EnemyController>(FindObjectsSortMode.None).Length;
+        if (enemyCount == 0)
+        {
+            round += 1;
+            EWave(round);
+            Instantiate(powerPrefab, Generate(), powerPrefab.transform.rotation);
+        }
+    }
     private Vector3 Generate()
     {
         float spawnPosX = Random.Range(-spawnRange, spawnRange);
